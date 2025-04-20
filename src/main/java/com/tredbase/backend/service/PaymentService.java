@@ -112,7 +112,7 @@ public class PaymentService {
         }
         //credit student account
         log.info("Student bal before deposit: {}", student.getBalance());
-        student.deposit(totalAmount);
+        student.deposit(paymentRequest.amount());
         log.info("Student bal after deposit: {}", student.getBalance());
         studentRepository.save(student);
         //record payment history
