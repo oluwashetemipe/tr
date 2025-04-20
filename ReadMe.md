@@ -52,19 +52,21 @@ Parent, Student, and ParentStudentRelationship tables allow:
 
 Shared or sole custody.
 
-Dynamic payment splits (payment_share).
+Dynamic payment splits based on percentage(payment_share).
 
 Soft deletion via is_active.
 
-This allows one student to be funded by multiple parents in configurable proportions, tracked via the join table.
+Students can be funded by multiple parents in configurable proportions, tracked via the join table.
 
 
 
 Validation: Ensures parents have sufficient balance before transaction.
+Input values were equally validated
 
 Precision: Uses BigDecimal for accurate financial calculations.
 
-Concurrency: Optional @Transactional annotations to prevent race conditions.
+Atomicity: @Transactional annotations to ensure either all operation fails or all comitted.
+Duplicate payments also not supported as each transaction reference is unique.
 
 Example
 If a student’s total fee is 1,000 and two parents share custody (50/50):
@@ -103,19 +105,19 @@ curl --location 'http://localhost:8080/v1/api/payments/process' \
 
 
 Fee Logic Explained
-Your fee system dynamically calculates the transaction fee as follows:
+The fee system dynamically calculates the transaction fee as follows:
 
-Amount between 200 and 2000 (inclusive):
+Amount between 200 and 2000 (exclusive):
 
 Default fee = 0.3
 
-Amount above 2000:
+Amount above 2000(inclusive):
 
 Default fee = 0.05
 
 Overridden Fee:
 
-If a custom fee is passed in the request, it overrides the default logic.
+If a custom fee is passed in the request, it overrides the default logic. The fee is nullable
 
 Example
 For a ₦200 payment:
@@ -123,5 +125,7 @@ For a ₦200 payment:
 Default fee: 0.3
 
 Passed overridden fee: 0.5 → This is used instead of the default
+
+https://www.postman.com/temipe/workspace/tredbase/collection/18754440-8bd73053-e564-4938-84dd-0d9ae88d162f?action=share&creator=18754440
 
 
