@@ -6,15 +6,11 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 @MappedSuperclass
 @Data
 public class Account {
 
-    @Id
-    @GeneratedValue
-    private UUID id;
     @Column(nullable = false)
     protected BigDecimal balance = BigDecimal.ZERO;
 
